@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        window.onload = () => {
+            const socket = io();
+            const cajaMensaje = document.getElementById('cajaMensaje');
+            const mensajes = document.getElementById('mensajes');
+            
+            const params = new URLSearchParams(window.location.search);
+            const userData = {
+                nombre: params.get('nombre') || prompt("Escribe tu nombre"),
+                estado: params.get('estado') || "Sin estado",
+                avatar: params.get('avatar') || "avatar1.png"
+            };
+            socket.emit('nombre', userData.nombre);
+            socket.emit("identificacion", userData);
+
+            cajaMensaje.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && cajaMensaje.value.trim() !== '') {
+                    socket.emit('mensaje', { nombre: userData.nombre, mensaje: cajaMensaje.value });
+                    cajaMensaje.value = '';
+                }
+            });
+
+            socket.on("nombre", (nombre) => {
+                mensajes.innerHTML += `<li><b>${nombre} ha entrado</b></li>`;
+            });
+
+            socket.on('holaDesdeElServidor', (datos) => {
+                mensajes.innerHTML += `<li>${datos.nombre}: ${datos.mensaje}</li>`;
+            });
+
+            socket.on("seHaDesconectado", (nombre) => {
+                mensajes.innerHTML += `<li><b>${nombre} salió</b></li>`;
+            });
+
+            socket.on("nuevoUsuario", users => {
+                let lista = '';
+                users.forEach(u => { lista += `<li>${u.nombre} (${u.estado})</li>`; });
+                document.getElementById('listaUsuarios').innerHTML = lista;
+            });
+
+            cajaMensaje.addEventListener('input', () => {
+                socket.emit('escribiendo');
+                setTimeout(() => socket.emit('dejoDeEscribir'), 2000);
+            });
+
+            socket.on("usuarioEscribiendo", nombre => {
+                document.getElementById('avisoEscribiendo').textContent = nombre + " está escribiendo...";
+            });
+
+            socket.on("usuarioDejoDeEscribir", nombre => {
+                document.getElementById('avisoEscribiendo').textContent = '';
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="panelIzquierdo">
+        <h3>Usuarios conectados</h3>
+        <ul id="listaUsuarios"></ul>
+    </div>
+    <div id="panelChat">
+        <div id="mensajes"></div>
+        <input id="cajaMensaje" placeholder="Escribe un mensaje..." />
+    </div>
+    <div id="avisoEscribiendo"></div>
+</body>
+</html>

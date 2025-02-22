@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- ...minimal head... -->
+    <meta charset="UTF-8">
+    <title>Login</title>
+  </head>
+  <body>
+    <form id="loginForm">
+      <input type="text" name="nombre" placeholder="Nombre" required />
+      <!-- Se quita required para que el estado pueda estar vacío -->
+      <input type="text" name="estado" placeholder="Estado" />
+      <!-- Reemplazo de select por botones de radio con imágenes -->
+      <div id="avatarSelection">
+        <label>
+          <input type="radio" name="avatar" value="avatar1.png" required>
+          <img src="/img/avatar1.png" alt="Avatar 1" width="50">
+        </label>
+        <label>
+          <input type="radio" name="avatar" value="avatar2.png" required>
+          <img src="/img/avatar2.png" alt="Avatar 2" width="50">
+        </label>
+        <!-- Agregar más opciones de avatar según se requiera -->
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const nombre = e.target.nombre.value;
+        // Si el campo estado está vacío se asigna "Sin estado"
+        const estado = e.target.estado.value || "Sin estado";
+        const avatar = e.target.avatar.value;
+        window.location.href = '/?nombre=' + encodeURIComponent(nombre) +
+                               '&estado=' + encodeURIComponent(estado) +
+                               '&avatar=' + encodeURIComponent(avatar);
+      });
+    </script>
+  </body>
+</html>
