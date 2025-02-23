@@ -5,60 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        window.onload = () => {
-            const socket = io();
-            const cajaMensaje = document.getElementById('cajaMensaje');
-            const mensajes = document.getElementById('mensajes');
-            
-            const params = new URLSearchParams(window.location.search);
-            const userData = {
-                nombre: params.get('nombre') || prompt("Escribe tu nombre"),
-                estado: params.get('estado') || "Sin estado",
-                avatar: params.get('avatar') || "avatar1.png"
-            };
-            socket.emit('nombre', userData.nombre);
-            socket.emit("identificacion", userData);
-
-            cajaMensaje.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && cajaMensaje.value.trim() !== '') {
-                    socket.emit('mensaje', { nombre: userData.nombre, mensaje: cajaMensaje.value });
-                    cajaMensaje.value = '';
-                }
-            });
-
-            socket.on("nombre", (nombre) => {
-                mensajes.innerHTML += `<li><b>${nombre} ha entrado</b></li>`;
-            });
-
-            socket.on('holaDesdeElServidor', (datos) => {
-                mensajes.innerHTML += `<li>${datos.nombre}: ${datos.mensaje}</li>`;
-            });
-
-            socket.on("seHaDesconectado", (nombre) => {
-                mensajes.innerHTML += `<li><b>${nombre} salió</b></li>`;
-            });
-
-            socket.on("nuevoUsuario", users => {
-                let lista = '';
-                users.forEach(u => { lista += `<li>${u.nombre} (${u.estado})</li>`; });
-                document.getElementById('listaUsuarios').innerHTML = lista;
-            });
-
-            cajaMensaje.addEventListener('input', () => {
-                socket.emit('escribiendo');
-                setTimeout(() => socket.emit('dejoDeEscribir'), 2000);
-            });
-
-            socket.on("usuarioEscribiendo", nombre => {
-                document.getElementById('avisoEscribiendo').textContent = nombre + " está escribiendo...";
-            });
-
-            socket.on("usuarioDejoDeEscribir", nombre => {
-                document.getElementById('avisoEscribiendo').textContent = '';
-            });
-        }
-    </script>
+    <!-- Actualiza la ruta al script -->
+    <script src="/cliente/cliente.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div id="panelIzquierdo">
@@ -70,5 +19,35 @@
         <input id="cajaMensaje" placeholder="Escribe un mensaje..." />
     </div>
     <div id="avisoEscribiendo"></div>
+    
+    <!-- Nueva sección para unirse a salas -->
+    <div id="rooms">
+        <form id="formRoom">
+            <input id="roomName" type="text" placeholder="Nombre de la sala" required>
+            <button type="submit">Unirse a la sala</button>
+        </form>
+        <div id="currentRoom"></div>
+    </div>
+    
+    <script>
+        const socket = io();
+
+        // Manejar unión a sala
+        const formRoom = document.getElementById('formRoom');
+        formRoom.addEventListener('submit', e => {
+            e.preventDefault();
+            const room = document.getElementById('roomName').value.trim();
+            if(room){
+                socket.emit('joinRoom', room);
+            }
+        });
+
+        // Confirmación de la unión a la sala
+        socket.on('joinedRoom', (room) => {
+            document.getElementById('currentRoom').textContent = 'Sala actual: ' + room;
+            // Puedes limpiar el campo de entrada o realizar otras actualizaciones de UI
+            document.getElementById('roomName').value = '';
+        });
+    </script>
 </body>
 </html>

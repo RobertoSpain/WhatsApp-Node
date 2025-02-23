@@ -1,0 +1,95 @@
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #ece5dd;
+  margin: 0;
+}
+
+.header {
+  background-color: #075e54;
+  color: #fff;
+  padding: 15px;
+  text-align: left;
+  font-size: 20px;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+}
+
+.chat-container {
+  display: flex;
+  height: calc(100vh - 50px);
+}
+
+/* Estilo de lista de usuarios similar a WhatsApp */
+.user-list {
+  width: 30%;
+  background-color: #fff;
+  padding: 10px;
+  border-left: 2px solid #f0f0f0;
+  overflow-y: auto;
+}
+
+/* Fondo con patrón sutil para el área de chat */
+.chat-area {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  background: url('whatsapp-pattern.png') repeat;
+  background-size: cover;
+}
+
+/* Mensajes con burbujas estilo WhatsApp */
+.messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background-color: #e5ddd5;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 18px;
+  line-height: 1.4;
+}
+
+.message-bubble.in {
+  background-color: #fff;
+  align-self: flex-start;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.message-bubble.out {
+  background-color: #dcf8c6;
+  align-self: flex-end;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Área de entrada de mensajes */
+.input-area {
+  display: flex;
+  background: #f0f0f0;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.input-area input {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 16px;
+}
+
+.input-area button {
+  border: none;
+  background: #075e54;
+  color: #fff;
+  padding: 0 15px;
+  margin-left: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}

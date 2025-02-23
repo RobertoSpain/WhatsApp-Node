@@ -7,7 +7,9 @@ const { createServer } = require('node:http');
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  connectionStateRecovery: {} // Habilita la recuperación del estado de la conexión
+});
 var numUsuarios = 0;
 const usuarios = new Map();
 
@@ -47,9 +49,35 @@ io.on('connection', (socket) => {
     io.emit("usuarioDejoDeEscribir", socket.userData?.nombre);
   });
 
+  // Permite al usuario unirse a una sala:
+  socket.on('joinRoom', (room) => {
+    socket.join(room);
+    console.log(`${socket.userData?.nombre} se unió a la sala: ${room}`);
+    // Opcional: notificar al socket que se ha unido
+    socket.emit('joinedRoom', room);
+  });
+
   socket.on('mensaje', (datos) => {
-    console.log("Soy el servidor y he recibido un mensaje con datos = " + datos);
-    io.emit("holaDesdeElServidor", datos);
+    if (datos.room) {
+      console.log(`Mensaje a sala ${datos.room} de ${datos.nombre}: ${datos.mensaje}`);
+      io.to(datos.room).emit("holaDesdeElServidor", datos);
+    } else {
+      console.log(`Mensaje global de ${datos.nombre}: ${datos.mensaje}`);
+      io.emit("holaDesdeElServidor", datos);
+    }
+  });
+
+  socket.on('privateMessage', (data) => {
+    // data = { targetName, message }
+    let targetSocketId = null;
+    usuarios.forEach((userData, key) => {
+      if (userData.nombre === data.targetName) {
+        targetSocketId = key;
+      }
+    });
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('privateMessage', { sender: socket.userData.nombre, message: data.message });
+    }
   });
 
   socket.on('disconnect', () => {
