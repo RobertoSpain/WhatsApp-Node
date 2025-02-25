@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <script src="/socket.io/socket.io.js"></script>
-    <!-- Actualiza la ruta al script -->
     <script src="/cliente/cliente.js"></script>
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -20,34 +19,8 @@
     </div>
     <div id="avisoEscribiendo"></div>
     
-    <!-- Nueva sección para unirse a salas -->
-    <div id="rooms">
-        <form id="formRoom">
-            <input id="roomName" type="text" placeholder="Nombre de la sala" required>
-            <button type="submit">Unirse a la sala</button>
-        </form>
-        <div id="currentRoom"></div>
-    </div>
-    
     <script>
         const socket = io();
-
-        // Manejar unión a sala
-        const formRoom = document.getElementById('formRoom');
-        formRoom.addEventListener('submit', e => {
-            e.preventDefault();
-            const room = document.getElementById('roomName').value.trim();
-            if(room){
-                socket.emit('joinRoom', room);
-            }
-        });
-
-        // Confirmación de la unión a la sala
-        socket.on('joinedRoom', (room) => {
-            document.getElementById('currentRoom').textContent = 'Sala actual: ' + room;
-            // Puedes limpiar el campo de entrada o realizar otras actualizaciones de UI
-            document.getElementById('roomName').value = '';
-        });
     </script>
 </body>
 </html>

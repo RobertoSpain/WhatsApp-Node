@@ -49,22 +49,9 @@ io.on('connection', (socket) => {
     io.emit("usuarioDejoDeEscribir", socket.userData?.nombre);
   });
 
-  // Permite al usuario unirse a una sala:
-  socket.on('joinRoom', (room) => {
-    socket.join(room);
-    console.log(`${socket.userData?.nombre} se unió a la sala: ${room}`);
-    // Opcional: notificar al socket que se ha unido
-    socket.emit('joinedRoom', room);
-  });
-
   socket.on('mensaje', (datos) => {
-    if (datos.room) {
-      console.log(`Mensaje a sala ${datos.room} de ${datos.nombre}: ${datos.mensaje}`);
-      io.to(datos.room).emit("holaDesdeElServidor", datos);
-    } else {
-      console.log(`Mensaje global de ${datos.nombre}: ${datos.mensaje}`);
-      io.emit("holaDesdeElServidor", datos);
-    }
+    console.log(`Mensaje global de ${datos.nombre}: ${datos.mensaje}`);
+    io.emit("holaDesdeElServidor", datos);
   });
 
   socket.on('privateMessage', (data) => {
