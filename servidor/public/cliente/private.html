@@ -4,34 +4,8 @@
   <meta charset="UTF-8">
   <title>Chat Privado</title>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    window.onload = () => {
-      const params = new URLSearchParams(window.location.search);
-      const target = params.get('target');
-      const sender = params.get('sender');
-      // Actualiza la interfaz con el nombre del destinatario
-      document.getElementById('targetName').textContent = target;
-      
-      const socket = io();
-      // Se identifica el usuario en este socket
-      socket.emit('nombre', sender);
-      socket.emit('identificacion', { nombre: sender, estado: 'privado', avatar: 'avatar1.png' });
-
-      document.getElementById('formPrivate').addEventListener('submit', e => {
-        e.preventDefault();
-        const message = document.getElementById('privateMessage').value;
-        if(message.trim() !== ''){
-          socket.emit('privateMessage', { targetName: target, message: message });
-          document.getElementById('privateChatArea').innerHTML += `<div><b>Tú:</b> ${message}</div>`;
-          document.getElementById('privateMessage').value = '';
-        }
-      });
-
-      socket.on('privateMessage', (data) => {
-        document.getElementById('privateChatArea').innerHTML += `<div><b>${data.sender}:</b> ${data.message}</div>`;
-      });
-    }
-  </script>
+  <script src="/cliente/cliente.js"></script>
+  <link rel="stylesheet" href="/css/smsPrivados.css">
 </head>
 <body>
   <h3>Chat privado: Tú conversas con <span id="targetName"></span></h3>
@@ -40,5 +14,6 @@
     <input id="privateMessage" placeholder="Escribe tu mensaje..."/>
     <button type="submit">Enviar</button>
   </form>
+  <div id="avisoEscribiendoPrivado"></div>
 </body>
 </html>

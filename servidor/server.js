@@ -22,6 +22,10 @@ app.get('/', (req, res) => {
   }
 });
 
+app.get('/private.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/cliente/private.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
@@ -64,6 +68,30 @@ io.on('connection', (socket) => {
     });
     if (targetSocketId) {
       io.to(targetSocketId).emit('privateMessage', { sender: socket.userData.nombre, message: data.message });
+    }
+  });
+
+  socket.on('escribiendoPrivado', (data) => {
+    let targetSocketId = null;
+    usuarios.forEach((userData, key) => {
+      if (userData.nombre === data.targetName) {
+        targetSocketId = key;
+      }
+    });
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('escribiendoPrivado', { sender: socket.userData.nombre });
+    }
+  });
+
+  socket.on('dejoDeEscribirPrivado', (data) => {
+    let targetSocketId = null;
+    usuarios.forEach((userData, key) => {
+      if (userData.nombre === data.targetName) {
+        targetSocketId = key;
+      }
+    });
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('dejoDeEscribirPrivado', { sender: socket.userData.nombre });
     }
   });
 
