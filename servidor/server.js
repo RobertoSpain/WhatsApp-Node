@@ -127,6 +127,9 @@ io.on('connection', (socket) => {
         io.emit("seHaDesconectado", socket.userData.nombre);
         numUsuarios--;
         console.log("Ahora hay " + numUsuarios + " usuarios conectados.");
+        
+        // Emitir la lista actualizada de usuarios después de la desconexión
+        io.emit("nuevoUsuario", [...usuarios.values()]);
       } else {
         console.log(`Ventana de chat privado de ${socket.userData.nombre} cerrada`);
       }
