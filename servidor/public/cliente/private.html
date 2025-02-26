@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Privado</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/cliente/cliente.js"></script>
+  <link rel="stylesheet" href="/css/smsPrivados.css">
+</head>
+<body>
+  <header class="chat-header">conversas con <span id="targetName"></span></header>
+  <div id="privateChatArea" class="private-chat" style="border:1px solid #ccc; height:300px; overflow:auto;"></div>
+  <form id="formPrivate">
+    <input id="privateMessage" placeholder="Escribe tu mensaje..."/>
+    <button type="submit" class="send-button">Enviar</button>
+  </form>
+  <div id="avisoEscribiendoPrivado"></div>
+</body>
+</html>

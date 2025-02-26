@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Login</title>
+  </head>
+  <body class="login">
+    <form id="loginForm">
+      <input type="text" name="nombre" placeholder="Nombre" required />
+      <!-- Se quita required para que el estado pueda estar vacío -->
+      <input type="text" name="estado" placeholder="Estado" />
+      <!-- Reemplazo de select por botones de radio con imágenes -->
+      <div id="avatarSelection">
+        <label>
+          <input type="radio" name="avatar" value="avatar1.png" required>
+          <img src="/img/avatar1.png" alt="Avatar 1" width="50">
+        </label>
+        <label>
+          <input type="radio" name="avatar" value="avatar2.png" required>
+          <img src="/img/avatar2.png" alt="Avatar 2" width="50">
+        </label>
+        <label>
+          <input type="radio" name="avatar" value="avatar3.png" required>
+          <img src="/img/avatar3.png" alt="Avatar 3" width="50">
+        </label>
+        <label>
+          <input type="radio" name="avatar" value="avatar4.png" required>
+          <img src="/img/avatar4.png" alt="Avatar 4" width="50">
+        </label>
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+    <!-- Reemplazamos el script embebido con el archivo externo -->
+    <script src="/js/login.js"></script>
+    <script src="/cliente/cliente.js"></script>
+  </body>
+</html>
